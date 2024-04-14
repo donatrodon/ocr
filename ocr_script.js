@@ -23,7 +23,7 @@ function showLoader(show) {
     document.getElementById('loader').style.display = show ? 'block' : 'none';
 }
 
-function resizeImage(file, callback) {
+function resizeAndConvertImage(file, callback) {
     const maxWidth = 1024;
     const maxHeight = 768;
     const reader = new FileReader();
@@ -33,6 +33,7 @@ function resizeImage(file, callback) {
             let width = img.width;
             let height = img.height;
 
+            // Calculate the new dimensions based on maximum sizes
             if (width > height) {
                 if (width > maxWidth) {
                     height *= maxWidth / width;
@@ -50,9 +51,10 @@ function resizeImage(file, callback) {
             canvas.height = height;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
+            // Convert and output as PNG
             canvas.toBlob((blob) => {
-                callback(URL.createObjectURL(blob));
-            }, 'image/jpeg', 0.7);
+                callback(URL.createObjectURL(blob)), 'image/png';
+            }, 'image/png');
         };
         img.src = event.target.result;
     };
@@ -60,22 +62,20 @@ function resizeImage(file, callback) {
 }
 
 function recognizeText(imageFile) {
-    showLoader(true);
-    resizeImage(imageFile, (imageDataUrl) => {
+    document.getElementById('loader').style.display = 'block'; // Show loading indicator
+    resizeAndConvertImage(imageFile, (imageDataUrl) => {
         Tesseract.recognize(
             imageDataUrl,
-            'ara', // Or change dynamically based on user selection
+            'ara', // Specify Arabic language
             {
-                logger: m => console.log(m.status + ' ' + (m.progress * 100).toFixed(1) + '%'),
+                logger: m => console.log(`${m.status} ${Math.round(m.progress * 100)}%`)
             }
         ).then(({ data: { text } }) => {
             document.getElementById('output').value = text;
-            showLoader(false);
-            document.getElementById('startBtn').disabled = false; // Re-enable the button after processing
+            document.getElementById('loader').style.display = 'none'; // Hide loading indicator
         }).catch(err => {
             console.error('OCR Error:', err);
-            showLoader(false);
-            document.getElementById('startBtn').disabled = false; // Re-enable the button after error
+            document.getElementById('loader').style.display = 'none'; // Hide loading indicator
             alert('Error processing image!');
         });
     });
