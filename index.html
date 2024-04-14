@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCR Tool</title>
+<style>
+    body {
+        background-color: #0d1117; /* Dark background for the hacker feel */
+        color: #c9d1d9; /* Soft white text color for readability */
+        font-family: 'Courier New', Courier, monospace; /* Monospace font to give the terminal look */
+        margin: 0;
+        padding: 20px;
+        height: 100vh; /* Full viewport height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    input, textarea, button {
+        width: 100%; /* Full width elements */
+        padding: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+        box-sizing: border-box; /* Border and padding included in width/height */
+    }
+
+    input, textarea {
+        background-color: #161b22; /* Slightly lighter dark shade for input fields */
+        color: #58a6ff; /* Blue color for input text to make it pop */
+    }
+
+    button {
+        background-color: #238636; /* Green background for the button to stand out */
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #2ea043; /* Slightly lighter green on hover */
+    }
+
+    .loader {
+        border: 8px solid #30363d; /* Darker border color for loader */
+        border-radius: 50%;
+        border-top: 8px solid #58a6ff; /* Blue color for the loader animation */
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>OCR Tool</h1>
+    <input type="file" id="imageInput" class="form-control" accept="image/*">
+    <button id="startBtn">Extract Text</button>
+    <div id="loader" class="loader" style="display:none;"></div>
+    <textarea id="output" rows="8" placeholder="Extracted text will appear here..."></textarea>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2"></script>
+<script src="ocr_script.js"></script>
+</body>
+</html>
